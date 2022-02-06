@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  mysql:
+  keycloak_mysql:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: keycloak
@@ -9,21 +9,47 @@ services:
       MYSQL_USER: keycloak
       MYSQL_PASSWORD: keycloak
     volumes:
-      - db-data:/var/lib/mysql:rw
+      - keycloak-db-data:/var/lib/mysql:rw
   keycloak:
     image: jboss/keycloak:16.1.1
     environment:
       KEYCLOAK_USER: keycloak
       KEYCLOAK_PASSWORD: keycloak
       DB_VENDOR: MYSQL
-      DB_ADDR: mysql
+      DB_ADDR: keycloak_mysql
       DB_DATABASE: keycloak
       DB_USER: keycloak
       DB_PASSWORD: keycloak
     ports:
       - 8080:8080
     depends_on:
-      - mysql
+      - keycloak_mysql
+  unleash:
+    image: unleash-keycloak
+    build:
+      context: .
+      dockerfile: Dockerfile.unleash
+    environment:
+      DATABASE_HOST: unleash_postgres
+      DATABASE_NAME: unleash
+      DATABASE_USERNAME: unleash_user
+      DATABASE_PASSWORD: some_password
+      DATABASE_SSL: false
+      AUTH_HOST: http://localhost:8080 # Public Unleash URL
+      AUTH_REALM: unleash
+      AUTH_CLIENT_ID: unleash
+      CONTEXT_PATH: http://localhost:4242 # Public Unleash URL
+    depends_on:
+      - unleash_postgres
+    ports:
+      - 4242:4242
+  unleash_postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: some_password
+      POSTGRES_USER: unleash_user
+      POSTGRES_DB: unleash
+
 volumes:
-  db-data:
+  keycloak-db-data:
     driver: local
