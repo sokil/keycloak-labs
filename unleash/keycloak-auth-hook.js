@@ -46,12 +46,9 @@ function enableKeycloakOauth(app, config, services) {
             },
 
             async (accessToken, refreshToken, profile, done) => {
-                console.log(
-                    accessToken,
-                    refreshToken,
-                    profile,
-                    done
-                );
+                if (!profile.email) {
+                    return done(null, false);
+                }
 
                 const user = await userService.loginUserWithoutPassword(profile.email, true);
 
