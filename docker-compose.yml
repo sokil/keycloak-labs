@@ -34,7 +34,7 @@ services:
       DATABASE_NAME: unleash
       DATABASE_USERNAME: unleash_user
       DATABASE_PASSWORD: some_password
-      DATABASE_SSL: false
+      DATABASE_SSL: "false"
       AUTH_HOST: http://localhost:8080 # Public Unleash URL
       AUTH_REALM: unleash
       AUTH_CLIENT_ID: unleash
