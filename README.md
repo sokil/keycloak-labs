@@ -4,10 +4,24 @@ Integrate Keycloak with Unleash
 
 ## Services
 
+<<<<<<< HEAD
 | Service      | Description           |
 |--------------|-----------------------|
 | http://localhost:8080/ |  Keycloak | 
 | http://localhost:4242/ | Unleash |
+=======
+Keycloak and Unleash need to communicate directly and through browser so we need to configure host names in `/etc/hosts`:
+```
+127.0.0.1 keycloak
+127.0.0.1 unleash
+
+```
+
+| Service               | Description          |
+|-----------------------|----------------------|
+| http://keycloak:8080/ |   Keycloak | 
+| http://unleash:4242/  | Unleash |
+>>>>>>> 94e8160de723e18ee81e7335a205d6179c156467
 
 ### Unleash
 
@@ -30,6 +44,7 @@ Create realm `unleash` and client id `unleash`.
 In client set `Valid Redirect URIs` to `http://localhost:4242/api/auth/callback`
 
 Create user `unleashtest` and password `unleashtest` that may be used for authentication to unleash
+, don't forget to set its email.
 
 ## RSA Key Generation
 
@@ -38,3 +53,4 @@ openssl genpkey -out private.pem -algorithm rsa -pkeyopt rsa_keygen_bits:4096
 
 jwt public key:
 openssl pkey -in private.pem -out public.pem -pubout
+
