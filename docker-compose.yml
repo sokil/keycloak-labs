@@ -51,6 +51,15 @@ services:
       POSTGRES_PASSWORD: some_password
       POSTGRES_USER: unleash_user
       POSTGRES_DB: unleash
+  unleash_proxy:
+    image: unleashorg/unleash-proxy
+    environment:
+      UNLEASH_URL: http://unleash:4242/api
+      UNLEASH_PROXY_CLIENT_KEYS: test1
+      UNLEASH_API_TOKEN: test1
+    ports:
+      - 3000:3000
+
 
 volumes:
   keycloak-db-data:
