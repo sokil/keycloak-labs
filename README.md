@@ -21,7 +21,6 @@ Keycloak and Unleash need to communicate directly and through browser so we need
 |-----------------------|----------------------|
 | http://keycloak:8080/ |   Keycloak | 
 | http://unleash:4242/  | Unleash |
->>>>>>> 94e8160de723e18ee81e7335a205d6179c156467
 
 ### Unleash
 
@@ -41,7 +40,7 @@ password: keycloak
 
 Create realm `unleash` and client id `unleash`.
 
-In client set `Valid Redirect URIs` to `http://localhost:4242/api/auth/callback`
+In client set `Valid Redirect URIs` to `http://unleash:4242/api/auth/callback`
 
 Create user `unleashtest` and password `unleashtest` that may be used for authentication to unleash
 , don't forget to set its email.

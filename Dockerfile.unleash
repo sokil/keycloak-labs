@@ -1,4 +1,4 @@
-FROM unleashorg/unleash-server
+FROM unleashorg/unleash-server:4.4.3
 
 COPY ./unleash/index.js /unleash/index.js
 COPY ./unleash/keycloak-auth-hook.js /unleash/keycloak-auth-hook.js

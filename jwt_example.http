@@ -3,7 +3,10 @@ GET http://keycloak:8080/auth/realms/unleash/.well-known/openid-configuration
 Accept: application/json
 
 ### Get token endpoint in `token_endpoint`
-POST http://keycloak:8080/auth/realms/unleash/protocol/openid-connect/token?
+POST http://keycloak:8080/auth/realms/unleash/protocol/openid-connect/token
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=password&client_id=unleash&username=unleashtest&password=unleashtest
+
+###
+GET http://unleash:4242/api/auth/callback

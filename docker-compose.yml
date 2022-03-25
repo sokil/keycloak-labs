@@ -36,8 +36,8 @@ services:
       DATABASE_PASSWORD: some_password
       DATABASE_SSL: "false"
       AUTH_HOST: http://keycloak:8080 # Public Keycloak URL
-      AUTH_REALM: unleash
-      AUTH_CLIENT_ID: unleash
+      AUTH_REALM: lol
+      AUTH_CLIENT_ID: lol
       CONTEXT_PATH: http://unleash:4242 # Public Unleash URL
     depends_on:
       - unleash_postgres
