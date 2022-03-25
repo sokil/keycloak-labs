@@ -4,12 +4,12 @@ Integrate Keycloak with Unleash
 
 ## Services
 
-<<<<<<< HEAD
+
 | Service      | Description           |
 |--------------|-----------------------|
-| http://localhost:8080/ |  Keycloak | 
-| http://localhost:4242/ | Unleash |
-=======
+| http://keycloak:8080/ |  Keycloak | 
+| http://unleash:4242/ | Unleash |
+
 Keycloak and Unleash need to communicate directly and through browser so we need to configure host names in `/etc/hosts`:
 ```
 127.0.0.1 keycloak

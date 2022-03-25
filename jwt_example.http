@@ -8,5 +8,6 @@ Content-Type: application/x-www-form-urlencoded
 
 grant_type=password&client_id=unleash&username=unleashtest&password=unleashtest
 
-###
-GET http://unleash:4242/api/auth/callback
+### Certificates
+GET http://keycloak:8080/auth/realms/unleash/protocol/openid-connect/certs
+Accept: application/json
