@@ -33,14 +33,14 @@ password: unleash4all
 
 Keycloak default credentials:
 
-username: keycloak
-password: keycloak
+username: admin
+password: admin
 
 #### Integration with unleash
 
-Create realm `unleash` and client id `unleash`.
+Create realm `unleash` and client id `unleash-web`.
 
-In client set `Valid Redirect URIs` to `http://unleash:4242/api/auth/callback`
+In client set `Valid Redirect URIs` to `http://unleash:4242/auth/oidc/callback`
 
 Create user `unleashtest` and password `unleashtest` that may be used for authentication to unleash
 , don't forget to set its email.

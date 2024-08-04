@@ -1,4 +1,13 @@
-FROM unleashorg/unleash-server:4.4.3
+FROM unleashorg/unleash-server:6.0.6
 
+# https://github.com/Unleash/unleash-examples/tree/main/v4/securing-keycloak-auth
+
+USER root
+
+COPY ./unleash/package.json /unleash/package.json
 COPY ./unleash/index.js /unleash/index.js
 COPY ./unleash/keycloak-auth-hook.js /unleash/keycloak-auth-hook.js
+
+RUN yarn install
+
+USER node

@@ -1,8 +1,6 @@
-version: '3.4'
-
 services:
   keycloak_mysql:
-    image: mysql:5.7
+    image: mysql:8.4
     environment:
       MYSQL_ROOT_PASSWORD: keycloak
       MYSQL_DATABASE: keycloak
@@ -10,11 +8,12 @@ services:
       MYSQL_PASSWORD: keycloak
     volumes:
       - keycloak-db-data:/var/lib/mysql:rw
+
   keycloak:
-    image: jboss/keycloak:16.1.1
+    image: quay.io/keycloak/keycloak:25.0
     environment:
-      KEYCLOAK_USER: keycloak
-      KEYCLOAK_PASSWORD: keycloak
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
       DB_VENDOR: MYSQL
       DB_ADDR: keycloak_mysql
       DB_DATABASE: keycloak
@@ -24,8 +23,11 @@ services:
       - 8080:8080
     depends_on:
       - keycloak_mysql
+    command:
+      - "start-dev"
+
   unleash:
-    image: unleash-keycloak
+    image: unleash-for-keycloak
     build:
       context: .
       dockerfile: Dockerfile.unleash
@@ -36,21 +38,21 @@ services:
       DATABASE_PASSWORD: some_password
       DATABASE_SSL: "false"
       AUTH_HOST: http://keycloak:8080 # Public Keycloak URL
-      AUTH_REALM: lol
-      AUTH_CLIENT_ID: lol
+      AUTH_REALM: "unleash"
+      AUTH_CLIENT_ID: "unleash-web"
       CONTEXT_PATH: http://unleash:4242 # Public Unleash URL
     depends_on:
       - unleash_postgres
-    volumes:
-      - ./unleash/keycloak-auth-hook.js:/unleash/keycloak-auth-hook.js
     ports:
       - 4242:4242
+
   unleash_postgres:
     image: postgres
     environment:
       POSTGRES_PASSWORD: some_password
       POSTGRES_USER: unleash_user
       POSTGRES_DB: unleash
+
   unleash_proxy:
     image: unleashorg/unleash-proxy
     environment:

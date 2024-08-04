@@ -1,3 +1,4 @@
+
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-unresolved */
 
@@ -25,7 +26,7 @@ const  { AuthenticationRequired } = require('unleash-server');
 const host = process.env.AUTH_HOST;
 const realm = process.env.AUTH_REALM;
 const clientID = process.env.AUTH_CLIENT_ID;
-const contextPath = process.env.CONTEXT_PATH;
+const contextPath = process.env.CONTEXT_PATH || '';
 
 function enableKeycloakOauth(app, config, services) {
     const { baseUriPath } = config.server;
@@ -38,17 +39,16 @@ function enableKeycloakOauth(app, config, services) {
                 host,
                 realm,
                 clientID,
-                clientSecret: "We don't need that, but is required",
+                clientSecret: "not needed for standard flow but required by passport",
                 callbackURL: `${contextPath}/api/auth/callback`,
-                authorizationURL: `${host}/auth/realms/${realm}/protocol/openid-connect/auth`,
-                tokenURL: `${host}/auth/realms/${realm}/protocol/openid-connect/token`,
-                userInfoURL: `${host}/auth/realms/${realm}/protocol/openid-connect/userinfo`,
+                authorizationURL: `${host}/realms/${realm}/protocol/openid-connect/auth`,
+                tokenURL: `${host}/realms/${realm}/protocol/openid-connect/token`,
+                userInfoURL: `${host}/realms/${realm}/protocol/openid-connect/userinfo`,
+                scope: 'openid profile email',
             },
 
             async (accessToken, refreshToken, profile, done) => {
-                if (!profile.email) {
-                    return done(null, false);
-                }
+                console.log("Access Token: " + accessToken);
 
                 const user = await userService.loginUserWithoutPassword(profile.email, true);
 
@@ -76,13 +76,13 @@ function enableKeycloakOauth(app, config, services) {
         },
     );
 
-    app.use('/api/admin/', (req, res, next) => {
+    app.use('/api', (req, res, next) => {
         if (req.user) {
             return next();
         }
         // Instruct unleash-frontend to pop-up auth dialog
         return res
-            .status('401')
+            .status(401)
             .json(
                 new AuthenticationRequired({
                     path: `${contextPath}/api/admin/login`,
