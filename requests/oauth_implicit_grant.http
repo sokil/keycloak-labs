@@ -1,0 +1,36 @@
+# MUST BE ENABLED Direct auth flows for "unleash-web" client.
+# Secret not required
+
+# --------> Client web application redirects user to auth server
+
+### Show form with login and password on auth server, or redirect to client if logged in already
+# @no-cookie-jar
+# @no-redirect
+GET http://keycloak:8080/realms/unleash/protocol/openid-connect/auth
+    ?response_type=token
+    &redirect_uri=http%3A%2F%2Funleash%3A4242%2Fapi%2Fauth%2Fcallback
+    &scope=openid%20profile%20email
+    &client_id=unleash-web
+
+# -------> If not previously logged in
+# -----------------------> Get form action from response HTML and pass it in next request
+# -------> If previously logged in, login pass step skipped and goes directly to http://unleash:4242/api/auth/callback
+
+### Submit login and password
+# @no-redirect
+POST http://keycloak:8080/realms/unleash/login-actions/authenticate?session_code=DeVxgClHWILTdrkW7DimqXeQJbZ3intfkA3avXIWVCs&execution=e707012c-4a3d-43ac-b5d4-f53318c725ee&client_id=unleash-web&tab_id=dpTNU1vnSdw&client_data=eyJydSI6Imh0dHA6Ly91bmxlYXNoOjQyNDIvYXBpL2F1dGgvY2FsbGJhY2siLCJydCI6InRva2VuIn0
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=admin&credentialId=
+
+# -------> redirect
+# http://unleash:4242/api/auth/callback#
+#      #session_state=cbf215a1-af14-4d53-a9e6-392c96c6ca7f
+#      &iss=http%3A%2F%2Fkeycloak%3A8080%2Frealms%2Funleash
+#      &access_token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIyT3JDQkh2d1lpVHdTT3RBeG50cy0xTk1GOFJiaFczR2xFb21qbzI2QTBrIn0.eyJleHAiOjE3MjI4MDE3NzgsImlhdCI6MTcyMjgwMDg3OCwiYXV0aF90aW1lIjoxNzIyODAwODc4LCJqdGkiOiIwMjAyYTRlNC1jMzYyLTQ4YTYtODBhZi0xNmRkZGYxZWNiZmIiLCJpc3MiOiJodHRwOi8va2V5Y2xvYWs6ODA4MC9yZWFsbXMvdW5sZWFzaCIsImF1ZCI6ImFjY291bnQiLCJzdWIiOiI5YmQxMWRmOS01Y2M2LTQyYzItYTZlMS1lMDUxN2I4ODdhNGYiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJ1bmxlYXNoLXdlYiIsInNpZCI6ImNiZjIxNWExLWFmMTQtNGQ1My1hOWU2LTM5MmM5NmM2Y2E3ZiIsImFjciI6IjEiLCJhbGxvd2VkLW9yaWdpbnMiOlsiaHR0cDovL3VubGVhc2g6NDI0Mi8qIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLXVubGVhc2giLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6ImFkbWluIGFkbWluZW5rbyIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkbWluIiwiZ2l2ZW5fbmFtZSI6ImFkbWluIiwiZmFtaWx5X25hbWUiOiJhZG1pbmVua28iLCJlbWFpbCI6ImFkbWluQHVubGVhc2guY29tIn0.Fye6nkkNFcrXoiLt_PcOmurfGVqnRd7WAmMEuffcK266HnY4jnD1giLHmPD_QAMgbdDdtUyXNQ3Vt8yZX0tXv8hI32Rkf5hT3rlkihJLcXV9TJkNAmO9fZGDhZj7da4opDRs__D0AFhLvD3jVMgQmRC7BWcTAZTdDgNRzUZ2pckq-YT04xHBpSHzfcMrc-ExqY3DCrK--JI0YZ-GYhXbR-8-ZcpsYJSdLhiVOlka3-Wrh88PYJqr3vvpbVtXuiKToT2wwI_aVneP3qYakUIB1iyTqcRjin3cAbWV7CWhJwNOsc803vDh2uiMjxaLHcZlpNre6mq9ip-EhIt-lSQwag
+#      &token_type=Bearer
+#      &expires_in=900
+
+### Get User Info
+GET http://keycloak:8080/realms/unleash/protocol/openid-connect/userinfo
+Authorization: Bearer {{access_token}}

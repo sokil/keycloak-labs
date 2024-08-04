@@ -40,9 +40,9 @@ password: admin
 
 Create realm `unleash` and client id `unleash-web`.
 
-In client set `Valid Redirect URIs` to `http://unleash:4242/auth/oidc/callback`
+In client set `Valid Redirect URIs` to `http://unleash:4242/api/auth/callback`
 
-Create user `unleashtest` and password `unleashtest` that may be used for authentication to unleash
+Create user `admin` and password `admin` that may be used for authentication to unleash
 , don't forget to set its email.
 
 ## RSA Key Generation

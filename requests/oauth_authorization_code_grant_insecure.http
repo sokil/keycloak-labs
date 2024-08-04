@@ -1,0 +1,49 @@
+# MUST BE ENABLED Direct auth flows for "unleash-web" client.
+# Secret not required
+
+# --------> Client web application redirects user to auth server
+
+### Show form with login and password on auth server, or redirect to client if logged in already
+# @no-cookie-jar
+# @no-redirect
+GET http://keycloak:8080/realms/unleash/protocol/openid-connect/auth
+    ?response_type=code
+    &redirect_uri=http%3A%2F%2Funleash%3A4242%2Fapi%2Fauth%2Fcallback
+    &scope=openid%20profile%20email
+    &client_id=unleash-web
+
+# -------> If not previously logged in
+# -----------------------> Get form action from response HTML and pass it in next request
+# -------> If previously logged in, login pass step skipped and goes directly to http://unleash:4242/api/auth/callback
+
+### Submit login and password
+# @no-redirect
+POST http://keycloak:8080/realms/unleash/login-actions/authenticate
+    ?session_code=Y2KrWwBl7eFUQH-lHw64jmWt2jZdOq4szm1of5eSUdY
+    &execution=e707012c-4a3d-43ac-b5d4-f53318c725ee
+    &client_id=unleash-web
+    &tab_id=6JZEKpw6r54
+    &client_data=eyJydSI6Imh0dHA6Ly91bmxlYXNoOjQyNDIvYXBpL2F1dGgvY2FsbGJhY2siLCJydCI6ImNvZGUifQ
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=admin&credentialId=
+
+# -------> Redirect to http://unleash:4242/api/auth/callback?code=41408445-bcf5-400a-802f-73c65d13632f.5ac90ddb-e74c-4af1-9d04-359beb86fbb2.ae6e0ee4-92d0-4b71-94a9-d7c1dc24437a
+
+### Get token by auth grant
+# redirect_uri save as requesting code
+POST http://keycloak:8080/realms/unleash/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code
+&code=21a20313-557d-4abc-80cc-45168f3a6beb.ca151245-c80d-4901-a8f5-918c5cac6703.ae6e0ee4-92d0-4b71-94a9-d7c1dc24437a
+&client_id=unleash-web
+&client_secret=
+&redirect_uri=http%3A%2F%2Funleash%3A4242%2Fapi%2Fauth%2Fcallback
+&scope=openid%20email%20profile
+
+> storeAndPrintJWT.js
+
+### Get User Info
+GET http://keycloak:8080/realms/unleash/protocol/openid-connect/userinfo
+Authorization: Bearer {{access_token}}

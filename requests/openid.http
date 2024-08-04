@@ -5,6 +5,3 @@ Accept: application/json
 ### JWK / Cervificates
 GET http://keycloak:8080/realms/unleash/protocol/openid-connect/certs
 Accept: application/json
-
-### User Info
-GET http://keycloak:8080/realms/unleash/protocol/openid-connect/userinfo
