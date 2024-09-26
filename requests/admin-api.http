@@ -1,0 +1,55 @@
+# MUST BE ENABLED Client Authorization for "unleash-api" client
+# MUST BE ENABLED Standatd (Client Credentials) and Direct (Resource owner password) auth flows
+# MUST BE ADDED someIserId attribute to "Realm Settings" > "User Profile"
+
+### Get token wit hClient Credentials Grant
+POST http://keycloak:8080/realms/unleash/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+    &client_id=admin-api-client
+    &client_secret=cgNSu0CfWDMUEtzTTpYvM7joCNJyJFYr
+    &scope=openid%20email%20profile
+
+> storeAndPrintJWT.js
+
+### Create user
+POST http://keycloak:8080/admin/realms/unleash/users
+Authorization: Bearer {{access_token}}
+
+{
+    "username": "fff{{$timestamp}}",
+    "email": "username{{$timestamp}}@i.ua",
+    "attributes": {
+        "someUserId": {{$timestamp}}
+    },
+    "enabled": true,
+    "emailVerified": true
+}
+
+### Get user list
+GET http://keycloak:8080/admin/realms/unleash/users
+Authorization: Bearer {{access_token}}
+
+> {%
+    client.global.set("internalUserId", response.body[0].id);
+    client.global.set("email", response.body[0].email);
+    client.global.set("extrernalUserId", response.body[0].attributes['someUserId'][0]);
+%}
+
+### Get user by email
+GET http://keycloak:8080/admin/realms/unleash/users?email={{email}}
+Authorization: Bearer {{access_token}}
+
+### Get user by attribute
+GET http://keycloak:8080/admin/realms/unleash/users?q=someUserId:{{extrernalUserId}}
+Authorization: Bearer {{access_token}}
+
+### Update first user from prev list
+PUT http://keycloak:8080/admin/realms/unleash/users/{{internalUserId}}
+Authorization: Bearer {{access_token}}
+
+{
+    "username": "fff",
+    "email": "updated{{$timestamp}}@i.ua"
+}
